@@ -6,6 +6,12 @@ html{
     /* overflow: hidden; */
 }
 body{
+    width: 90vw;
+    height: 90vh;
+    margin: 0 auto;
+    padding:0;
+    display: flex;
+    justify-content: center;
     /* max-width: 190em; */
 }
 
@@ -18,10 +24,21 @@ canvas {
 } */
 }
 .main{
-    width: 90vw;
-    max-width: 1200px;
-    height: 70vh;
-    padding: 0 5%
+    display: flex;
+    flex-direction: column;
+    /* width: 90vw;
+    max-width: 1000px; */
+    /* max-height: 500px;; */
+    /* height: 70vh; */
+    padding: 0 5%;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+    /* justify-content: center; */
+}
+.mainHolder{
+    display: flex;
+    justify-content: center;
 }
 .gameSpace{
     display: flex;
@@ -31,8 +48,14 @@ canvas {
 .game {
     width: 70%;
 }
-.links {
+.linkCon{
     width: 20%;
+}
+.links {
+    /* width: 20%; */
+    /* position: relative; */
+    display: flex;
+    flex-direction: column;
 }
 .controls{
     height: 40%;
@@ -43,15 +66,23 @@ canvas {
     width: 100%;
 }
 .logoCon{
-    position: relative;
+    background-color: #eee;
+    display:flex;
+    justify-content: center;
+    /* position: relative; */
 }
 .logo{
-    position: absolute;
-    top: -12em;
-    left: 5em;
-    display: inline;
-    height: 5em;
-    width: 6em;
+    width: 50%;
+    height: auto;
+    /* margin: 0 auto; */
+    /* position: relative; */
+    /* top: -10em;
+    left: 2em; */
+    /* display: inline; */
+    /* height: 5em; */
+    /* width: 6em; */
+    /* height: auto;
+    width: auto; */
 }
 .logo:hover{
     cursor: pointer;
