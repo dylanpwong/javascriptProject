@@ -219,8 +219,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         ctx.closePath();
     }
 
-    function movementHightlighter(){
-
+    function movementHightlighter(e){
+        e.preventDefault();
     }
 
     document.addEventListener("keydown",movementHightlighter,false);

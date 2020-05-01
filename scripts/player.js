@@ -925,6 +925,10 @@ document.addEventListener('DOMContentLoaded',()=>{
           // console.log(`my x: ${this.x}`)
           this.dest.x = randX;
           this.dest.y = randY;
+          if(Math.random()>.2){
+            this.dest.x = x;
+            this.dest.y = y;
+          }
           // console.log(`dest.x: ${this.dest.x}`);
           this.wave =true;
         }
@@ -969,6 +973,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
      function fireHandler(e) {
+       e.preventDefault();
          if(e.key=="Spacebar" || e.key==" "){
             // console.log("hello");
             //  fire(ctx,x,y,facing);
@@ -1053,6 +1058,7 @@ document.addEventListener('DOMContentLoaded',()=>{
               }
     }
     function keyUpHandler(e){
+      e.preventDefault();
       
         if (e.key == "Right" || e.key == "ArrowRight"|| e.key=='d') {
           rightPressed = false;
