@@ -31,3 +31,13 @@ canvas {
     height: 20%;
     width: 100%;
 }
+.logo{
+    position: relative;
+    top: -38%;
+    left: 20%;
+    height: 5em;
+    width: 6em;
+}
+.logo:hover{
+    cursor: pointer;
+}

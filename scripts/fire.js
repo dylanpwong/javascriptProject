@@ -24,6 +24,9 @@
         this.x = posX;
         this.y = posY;
         this.dir = dir;
+        this.angle = 0;
+        this.damage=0;
+        this.explosionSize=0;
         this.slashLife  = 0;
         this.slashDir={
             x: 0,

@@ -11,9 +11,46 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     sideCanvas.wdith =1000;
     sideCanvas.height =500;
+    // canvas.width = 600;
+    // canvas.height = 300;
+    console.log(canvas.width);
+    console.log(canvas.height);
     // sideCanvas.style.width= sideCanvas.width;
     // sideCanvas.style.height=sideCanvas.height;
 
+    let aquaSprites={
+      /// left and right
+      rightIdle: "./images/aqua/aquaRightIdle.png",
+      leftIdle: "./images/aqua/aquaLeftIdle.png",
+      rightStart: "./images/aqua/aquaRightStart.png",
+      leftStart: "./images/aqua/aquaLeftStart.png",
+      rightWalk: "./images/aqua/aquaRightWalk.png",
+      leftWalk: "./images/aqua/aquaLeftWalk.png",
+      ////
+      upIdle: "./images/aqua/aquaUpIdle.png",
+      downIdle: "./images/aqua/aquaDownIdle.png",
+      upStart: "./images/aqua/aquaUpStart.png",
+      downStart: "./images/aqua/aquaDownStart.png",
+      upWalk: "./images/aqua/aquaUpWalk.png",
+      downWalk: "./images/aqua/aquaDownWalk.png",
+    }
+
+    let darknessSprites={
+      /// left and right
+      rightIdle: "./images/darkness/darknessRightIdle.png",
+      leftIdle: "./images/darkness/darknessLeftIdle.png",
+      rightStart: "./images/darkness/darknessRightStart.png",
+      leftStart: "./images/darkness/darknessLeftStart.png",
+      rightWalk: "./images/darkness/darknessRightWalk.png",
+      leftWalk: "./images/darkness/darknessLeftWalk.png",
+      ////
+      upIdle: "./images/darkness/darknessUpIdle.png",
+      downIdle: "./images/darkness/darknessDownIdle.png",
+      upStart: "./images/darkness/darknessUpStart.png",
+      downStart: "./images/darkness/darknessDownStart.png",
+      upWalk: "./images/darkness/darknessUpWalk.png",
+      downWalk: "./images/darkness/darknessDownWalk.png",
+    }
     let meguSprites = {
       /// left and right
       rightIdle: "./images/meguminRightIdle.png",
@@ -58,17 +95,22 @@ document.addEventListener('DOMContentLoaded',()=>{
     };
     var megumin = new Image();
     var kazuma = new Image();
+    var darkness =new Image();
+    var aqua =new Image();
     var slash = new Image();
     var enemy = new Image();
+    var bg =new Image();
+    bg.src ='./images/chicknzone.jpg';
     slash.src = slashes.f1;
     let KazumaHealth = 100;
     let MeguminHealth =100;
     let AquaHealth = 100;
     let DarknessHealth=100;
+    let score =0;
 
     let charSelect =0;
-    var protagonistArray=[kazuma,megumin];
-    var spritesArray=[kazumaSprites,meguSprites];
+    var protagonistArray=[kazuma,megumin,darkness,aqua];
+    var spritesArray=[kazumaSprites,meguSprites,darknessSprites,aquaSprites];
 
     var protagonist = protagonistArray[charSelect];
     var protagonistSprites = spritesArray[charSelect];
@@ -77,8 +119,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     var meguminWalkRight = new Image();
     meguminWalkRight.src = './images/meguminWalking.png';
 
-    let x = 10;
-    let y = 10;
+    let x = canvas.width/2;
+    let y = canvas.height/2;
     let dx = 2;
     let dy = -2;
     // Enemy
@@ -89,10 +131,24 @@ document.addEventListener('DOMContentLoaded',()=>{
       x: null,
       y: null
     };
+    //level
+      let levelBuffer=0;
+      let levelLimit=700;
+      let levelCounter=0;
+    //
+
+    let cooldownActive = false;
+    let explosionRelease = false;
     let firePressed =false;
     let playerBullets=[];
     let fireFrameCounter =0;
+    let explosionFrameCounter=0;
+    let EXPLOSION = 1000;
     let fireLimit = 5;
+    let explosionCooldown=1000;
+    let cooldownCounter=1001;
+    //slash
+    let canSlash=true;
     //
     let rightPressed = false;
     let leftPressed = false;
@@ -111,14 +167,19 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function draw(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctxSide.clearRect(0, 0, canvas.width, canvas.height);
+        ctxSide.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
+        ctx.drawImage(bg,0,0,300,150);
         // console.log(x,y);
-        
+        drawGithub();
+        drawScore();
         // ctx.drawImage(slash, 20, 20,30,30);
         movement();
         enemyHandler();
         playerFire();
         healthbar();
+        cooldownHandler();
+        hpRegen();
+        // gameOver();
         // console.log(currentSlash.x);
         requestAnimationFrame(draw);
     }
@@ -129,6 +190,17 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.addEventListener("keydown", fireHandler, false);
     draw();
     spawner(5);
+
+    function drawGithub(){
+      ctxSide.beginPath()
+      ctxSide.fillStyle = "black";
+      ctxSide.fill();
+      ctxSide.font = "2em sans-serif";
+
+      ctxSide.fillText("GitHub", sideCanvas.width * .3, sideCanvas.height * 0.9);
+
+      ctxSide.closePath();
+    }
     function  movement(){
         if (standingStill) {
           if (facing.right) {
@@ -197,6 +269,13 @@ document.addEventListener('DOMContentLoaded',()=>{
            frameCounter++;
          }
     }
+
+    function gameOver(){
+      if(MeguminHealth<=0||KazumaHealth<=0||DarknessHealth<=0||AquaHealth<=0){
+        alert("Game Over");
+        document.location.reload();
+      }
+    }
     function playerFire(){
         if (firePressed) {
           // drawBullet(x,y);
@@ -210,9 +289,29 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
         bulletHandler();
     }
+
+    function cooldownHandler(){
+        if(cooldownCounter<300){
+          cooldownActive=true;
+          firePressed = true;
+          cooldownCounter++;
+        }else if(cooldownCounter<explosionCooldown){
+          if(charSelect == 1) firePressed =false;
+          // if(charSelect !=1) firePressed =true; 
+          cooldownCounter++;
+          explosionRelease =false;
+          playerBullets = [];
+          // console.log(cooldownCounter);
+        }else if(cooldownActive){
+          explosionFrameCounter = 0;
+          cooldownActive= false;
+          // console.log(explosionFrameCounter);
+        }
+    }
     function enemyHandler(){
       let aliveEnemies=[];
       if (enemyArray.length >= 1) {
+        // ctx.globalAlpha =1;
         for (let i = 0; i < enemyArray.length; i++) {
           if(enemyArray[i].alive){
             enemyArray[i].render();
@@ -224,7 +323,59 @@ document.addEventListener('DOMContentLoaded',()=>{
           // console.log(enemyArray.length)
         }
         enemyArray = aliveEnemies;
+      }else{ //no enemies
+        // console.log("next");
+          if(levelBuffer< levelLimit){
+            drawNextLevel();
+            levelBuffer++;
+          }else{
+            levelBuffer=0;
+            levelCounter++;
+            if(levelCounter >2){
+              canvas.width=600;
+              canvas.height=300;
+              levelCounter+=20;
+            }
+            spawner(5+levelCounter);
+          }
       }
+    }
+
+    function drawScore(){
+      ctxSide.beginPath()
+      ctxSide.fillStyle = "black";
+      ctxSide.fill();
+      ctxSide.font = "2em sans-serif";
+
+      ctxSide.fillText(`Score: ${score}`, sideCanvas.width * .3, sideCanvas.height * 0.50);
+
+      ctxSide.closePath();
+    }
+    function hpRegen(){
+      if (charSelect!=2){
+        if(DarknessHealth < 100)DarknessHealth+=.05;
+      }
+      if(charSelect == 3){
+        if(MeguminHealth < 100) MeguminHealth+=.01;
+        if(KazumaHealth < 100) KazumaHealth+=.01;
+      }
+    }
+
+    function drawNextLevel(){
+      ctx.beginPath();
+      ctx.fillStyle ="rgba(3,232,252,.5)";
+      // ctx.globalAlpha = .2;
+      ctx.rect(0,canvas.height/2 -30,canvas.width,canvas.height *.3);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.fillStyle = "black";
+      ctx.fill();
+      ctx.font = "2em sans-serif";
+
+      ctx.fillText("Next Day!", canvas.width * .2, canvas.height/2);
+      ctx.closePath();
     }
 
     function healthbar(){
@@ -298,16 +449,34 @@ document.addEventListener('DOMContentLoaded',()=>{
 
       ctxSide.closePath();
     }
+
+    function drawWaterBullet(posX,posY){
+      let ballRadius =5;
+      ctx.beginPath();
+      ctx.arc(posX,posY,ballRadius,0,Math.PI *2);
+      ctx.fillStyle="#00cccc";
+      ctx.fill();
+      ctx.closePath();
+    }
     function drawBullet(posX,posY){
         let ballRadius = 5;
         // let posX = x;
         // let posY =y;
-        let speed = 2;
+        // let speed = 2;
          ctx.beginPath();
          // ctx.arc(x, y, 10, 0, Math.PI * 2);
          ctx.arc(posX, posY, ballRadius, 0, Math.PI * 2);
         //  posX+=speed;
-         ctx.fillStyle = "#FF0000";
+        let orange = "#E25822";
+        let otherRed= "#da3615";
+        let red = '#7C0A02';
+        let crimson ="#DC143c";
+        let lightRed="#e3820d";
+        let mustard="##9e0107";
+        let yellow="#e5db15";
+      let colors=[orange,red,lightRed,red,mustard,otherRed,crimson,yellow,crimson];
+        randColor = Math.floor(Math.random() * 9);
+         ctx.fillStyle = colors[randColor];
          ctx.fill();
          ctx.closePath();
     }
@@ -364,6 +533,9 @@ document.addEventListener('DOMContentLoaded',()=>{
    
      }
 
+     function drawExplosion(pos){
+       
+     }
     function bulletHandler(){
         let updatedBullets=[];
         for(let i =0;i<playerBullets.length;i++){
@@ -374,6 +546,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             }
         }
         playerBullets = updatedBullets;
+        // if(playerBullets.length == 0 && explosionFrameCounter >= EXPLOSION) cooldownCounter =0;
     };
     
     function createBullet(){
@@ -392,7 +565,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                     // console.log(protagonist);
                     switch(charSelect){
                         case 1:
-                            drawBullet(this.x,this.y);
+                                drawBullet(this.x,this.y);
                             break;
                         case 0:
                             slash.src = slashes[dir];
@@ -400,6 +573,15 @@ document.addEventListener('DOMContentLoaded',()=>{
                             currentSlash.y = this.y;
                             drawSlash3(this.x,this.y,this.slashDir,dir);
                             break;
+                        case 2:
+                        slash.src = slashes[dir];
+                        currentSlash.x = this.x;
+                        currentSlash.y = this.y;
+                        drawSlash3(this.x, this.y, this.slashDir, dir);
+                        break;
+
+                        case 3:
+                          drawWaterBullet(this.x,this.y);
                     }
                     // drawBullet(this.x,this.y);
                     // drawSlash(this.x,this.y);
@@ -408,7 +590,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           bullets.update = function () {
                 if (this.alive) {
                     switch(charSelect){
-                        case 1: //megumin
+                        case 3: //megumin straight bullets
                             switch(dir){
                                 case "up":
                                     this.y -=20;
@@ -423,6 +605,17 @@ document.addEventListener('DOMContentLoaded',()=>{
                                     this.x +=10;
                                     break;
                             }
+                        
+                        if (this.x >= canvas.width || this.y >= canvas.height || this.y <= 0 || this.x <= 0) {
+                          this.alive = false;
+                        }
+                        for (let ene = 0; ene < enemyArray.length; ene++) {
+                          if (enemyArray[ene].x < this.x + 10 && enemyArray[ene].x > this.x - 10) {
+                            if (enemyArray[ene].y < this.y + 10 && enemyArray[ene].y > this.y - 10) {
+                              enemyArray[ene].health -= 5;
+                            }
+                          }
+                        }
                             break;
                         case 0:
                             switch (dir) {
@@ -473,85 +666,93 @@ document.addEventListener('DOMContentLoaded',()=>{
                                 break;
                             }
                             break;
-                        case 4: //kazuma2
-                            switch(dir){
-                                case "left":
-                                    // this.slashDir.startX = 0;
-                                    // this.slashDir.startY = -20;
-                                   if(this.slashDir.wave){
-                                        this.slashDir.startX += 1;
-                                        if(this.slashDir.startX > 10) this.slashDir.wave = false;
-                                   } else{
-                                       this.slashDir.startX -= 1;
-                                       if(this.slashDir.startX < -10) this.slashDir.wave = true;
-                                   }
-                                    this.slashDir.startY += 1;
+                        case 1: //megumin
+                            
+                            if(explosionRelease){
+                              // if(this.explosionSize < 50){
+                              //   this.x = (x+ 10) + 20 +(this.explosionSize++) * Math.sin(this.angle+= 0.2) ;//+ 10
+                              // }else{
+                              //   this.x = (x + 10) + 20 + (this.explosionSize) * Math.sin(this.angle += 0.2);//+ 10
+                              // }
+                              // this.y = (y + 10) - 20 - (this.explosionSize) * Math.cos(this.angle);// - 20
+                              this.x = (canvas.width / 2) + (this.explosionSize++) * Math.sin(this.angle += 0.2);//+ 10
+                              this.y = (canvas.height / 2)  + (this.explosionSize) * Math.cos(this.angle);// - 20
+                              if (this.x >= canvas.width + 50 || this.y >= canvas.height + 50 || this.y <= -50 || this.x <= -50) {
+                                this.alive = false;
+                                // cooldownCounter = 0;
+                              }
+                              // console.log(this.explosionSize);
+                              // explosionFrameCounter++;
+                              //collision?
+                              for(let ene =0;ene < enemyArray.length;ene++){
+                                if(enemyArray[ene].x < this.x + 10 && enemyArray[ene].x > this.x -10){
+                                  if(enemyArray[ene].y <this.y +10 && enemyArray[ene].y >this.y -10){
+                                    enemyArray[ene].health -= 20;
+                                  }
+                                }
+                              }
+                            }else{
+                              this.x = (x + 10) + 20 * Math.sin(this.angle += 0.2);//+ 20
+                              this.y = (y + 10) - 20  * Math.cos(this.angle);// - 20
+                              explosionFrameCounter++;
+                            }
+                            if(this.angle >=6) this.angle =0;
+                            break;
+                        case 2: 
+                        switch (dir) {
+                          case "up":
+                            // slash.src = slashes.up;
+                            if (this.slashLife >= 5) {
+                              currentSlash.x = null;
+                              currentSlash.y = null;
+                              this.alive = false;
 
-                                    if(this.slashDir.startY  >= 10) this.alive =false;
-                                    break;
+                            } else {
+                              this.slashLife++;
                             }
                             break;
-                        case 3: //kazuma
-                            switch (dir) {
-                              case "up":
-                                  //starter value for control
-                                    // this.slashDir.secondX = (this.slashDir.secondX != null) ?  -10 : this.slashDir.secondX;
-                                  //
-                                  this.slashDir.x= 10;
-                                  this.slashDir.y= 0;
+                          case "down":
+                            if (this.slashLife >= 5) {
+                              currentSlash.x = null;
+                              currentSlash.y = null;
+                              this.alive = false;
 
-                                  this.slashDir.startX = -12;
-                                //   this.slashDir.startX = 10;
-                                  this.slashDir.startY = 0;
-
-                                  this.slashDir.secondX +=15 ; //control Point
-                                  this.slashDir.secondY= -10;
-
-                                  if(this.slashDir.secondX >=40) this.alive =false;
-                                // this.y -= 20
-                                break;
-                              case "down":
-                                // this.y += 10;
-                                 this.slashDir.x = 10;
-                                 this.slashDir.y = 0;
-
-                                 this.slashDir.startX = -12;
-                                 //   this.slashDir.startX = 10;
-                                 this.slashDir.startY = 0;
-
-                                 this.slashDir.secondX = 12; //control Point
-                                 this.slashDir.secondY = 20;
-                                break;
-                              case "left":
-                                  this.slashDir.x = 0;
-                                  this.slashDir.y = 5;
-
-                                this.slashDir.startX = 0; //bezier curver point
-                                this.slashDir.startY = -20;
-
-                                this.slashDir.secondX =  -20;
-                                this.slashDir.secondY =0;
-                                break;
-                              case "right":
-                                // this.x += 10;
-
-                                this.slashDir.x=0;
-                                this.slashDir.y = 5;
-
-                                this.slashDir.startX = 0;
-                                this.slashDir.startY = -20;
-
-                                this.slashDir.secondX = 20;
-                                this.slashDir.secondY += 10;
-
-                                if(this.slashDir.secondY >= 20) this.alive = false;
-                                break;
+                            } else {
+                              this.slashLife++;
                             }
-                    }
+
+                            break;
+                          case "left":
+                            // slash.src = slashes.left;
+                            // this.slashDir.startY = -20;
+                            if (this.slashLife >= 5) {
+                              currentSlash.x = null;
+                              currentSlash.y = null;
+                              this.alive = false;
+
+                            } else {
+                              this.slashLife++;
+                            }
+                            break;
+                          case "right":
+                            if (this.slashLife >= 5) {
+                              currentSlash.x = null;
+                              currentSlash.y = null;
+                              this.alive = false;
+
+                            } else {
+                              this.slashLife++;
+                            }
+
+                            break;
+                        }
+                        break;
+                           
+                    
                 }
                  
-            if(this.x >= canvas.width || this.y >= canvas.height || this.y<= 0|| this.x <=0){
-                this.alive = false;
+            // if(this.x >= canvas.width || this.y >= canvas.height || this.y<= 0|| this.x <=0){
+            //     this.alive = false;
             }
           };
 
@@ -630,6 +831,12 @@ document.addEventListener('DOMContentLoaded',()=>{
             case 1: 
               MeguminHealth -=1.5;
               break;
+            case 2:
+              DarknessHealth -=0.3;
+              break;
+            case 3:
+              AquaHealth -=1.3;
+              break;
           }
           // KazumaHealth -=1;
         }// mob takes damage from slash;
@@ -637,7 +844,9 @@ document.addEventListener('DOMContentLoaded',()=>{
             if(this.y < currentSlash.y + 30 && this.y > currentSlash.y -30){
               // console.log(`this.x: ${this.x}`);
               // console.log(`currentSlash: ${currentSlash.x}`);
-              this.health -= 20;
+              // console.log(charSelect);
+              if(charSelect==0) this.health -= 20;
+              if(charSelect==2) this.health -=3;
               // this.alive =false;
             }
         }
@@ -647,7 +856,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         drawEnemy(this.x,this.y,this.img);
       }
       newMob.update= function(){
-        if(this.health <= 0) this.alive = false;
+        if(this.health <= 0) {
+          this.alive = false;
+          score +=100;
+        }
+
         if(this.wave){
           this.moveToLocation(this.dest.x,this.dest.y);
         }else{
@@ -705,9 +918,24 @@ document.addEventListener('DOMContentLoaded',()=>{
             //  fire(ctx,x,y,facing);
             // test();
             // createBullet();
-            firePressed =true;
             // KazumaHealth -=5;
+            firePressed =true;
+          //  if(cooldownCounter<=explosionCooldown){
+
+          //  }else{
+          //    firePressed=true;
+          //  }
          }
+    }
+    function upExplosion(){
+      if(!cooldownActive){
+        if (explosionFrameCounter >= EXPLOSION){
+          // console.log(explosionFrameCounter)
+          cooldownCounter=0;
+          explosionRelease=true;
+        }
+
+      }
     }
       
     function keyDownHandler(e){
@@ -744,6 +972,14 @@ document.addEventListener('DOMContentLoaded',()=>{
               }
               else if(e.key=="q"){
                 // protagonistArray
+                if(charSelect - 1 < 0 ){
+                  charSelect = protagonistArray.length - 1;
+                }else{
+                  charSelect--;
+                }
+                protagonist = protagonistArray[charSelect];
+                protagonistSprites = spritesArray[charSelect];
+                playerBullets = [];
               }else if(e.key=="e"){
                   if(charSelect + 1 >= protagonistArray.length){
                     charSelect = 0;
@@ -771,6 +1007,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             standingStill =true;
         }else if(e.key=="Spacebar"||e.key==" "){
             firePressed =false;
+            upExplosion();
         }
     }
     // window.onload = function () {
@@ -784,6 +1021,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     //   ctx.fillStyle = "red";
     //   ctx.fillRect(0, 0, 10, 10);
     // } 
+    let logo = document.getElementById("logo");
+  logo.onclick = () => window.open('https://github.com/dylanpwong/javascriptProject')
 });
 
 
