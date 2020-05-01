@@ -138,6 +138,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       let pause =false;
       let lose =false;
       let damageStack=0;
+      let aquaBuffer=0;
+      let aquaLimit=50;
     //
 
     let cooldownActive = false;
@@ -177,6 +179,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         drawScore();
         // ctx.drawImage(slash, 20, 20,30,30);
         if(!pause){
+          bg.src ='./images/chicknzone.jpg';
           if(!lose){
 
             movement();
@@ -189,7 +192,16 @@ document.addEventListener('DOMContentLoaded',()=>{
             drawLose();
           }
         }else{
-          pauseScreen();
+          if(aquaBuffer<=aquaLimit){
+            bg.src =  './images/aquapause.jpg';
+            aquaBuffer++
+          }else if(aquaBuffer<= aquaLimit*2){
+            bg.src = './images/aquapause2.png';
+            aquaBuffer++;
+          }else{
+            aquaBuffer = 0;
+          }
+          //pauseScreen();
         }
         healthbar();
         // gameOver();
@@ -423,6 +435,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     function pauseScreen(){
+      
       ctx.beginPath();
       ctx.fillStyle = "rgba(3,232,252,.5)";
       // ctx.globalAlpha = .2;

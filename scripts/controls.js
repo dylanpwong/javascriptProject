@@ -7,16 +7,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     canvas.width =1000;
     canvas.height=200;
-
-    function draw(){
-        WASD();
-        space();
-        pauseB();
-        switchChars();
-        requestAnimationFrame(draw);
+    let inst=false;
+    function draw2(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if(!inst){
+            WASD();
+            space();
+            pauseB();
+            switchChars();
+        }else{
+            instructions();
+        }
+        requestAnimationFrame(draw2);
+        // requestAnimationFrame(draw);
     }
 
-    draw();
+    draw2();
 
     function WASD(){
         ctx.beginPath();
@@ -137,6 +143,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function pauseB(){
         ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.font = "1em sans-serif";
+
+        ctx.fillText("Press I for Instructions", canvas.width * .8, canvas.height * .1);
+        ctx.closePath();
+
+        ctx.beginPath();
         ctx.fillStyle = "rgba(3,232,252,.5)";
         // ctx.globalAlpha = .2;
         ctx.rect(canvas.width * .58, canvas.height * .55, canvas.width * .07, canvas.height * .33);
@@ -219,9 +233,96 @@ document.addEventListener('DOMContentLoaded',()=>{
         ctx.closePath();
     }
 
+    function instructions(){
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(3,232,252,.5)";
+        // ctx.globalAlpha = .2;
+        ctx.rect(canvas.width * .9, canvas.height * .1, canvas.width * .07, canvas.height * .33);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.font = "3em Times new roman";
+
+        ctx.fillText("I", canvas.width * .93, canvas.height * .35);
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.font = "1em sans-serif";
+
+        ctx.fillText("Press I", canvas.width*.9, canvas.height * .5);
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.fillStyle = "green";
+        ctx.fill();
+        ctx.font = "2em sans-serif";
+
+        ctx.fillText("Kazuma: hold space to swing sword for medium damage", 0, canvas.height * .15);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.font = "2em sans-serif";
+
+        ctx.fillText("Megumin: hold space and release to trigger an EXPLOSION", 0, canvas.height * .30);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.font = "1em sans-serif";
+
+        ctx.fillText("Explosion has a cooldown and prevents aqua from using magic for a short time", 3, canvas.height * .4);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#18c2f6";
+        ctx.fill();
+        ctx.font = "2em sans-serif";
+
+        ctx.fillText("Aqua: hold space to deal weak magic damage", 0, canvas.height * .55);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#18c2f6";
+        ctx.fill();
+        ctx.font = "1em sans-serif";
+
+        ctx.fillText("Aqua runs fast! And heals all other members while she is out!", 0, canvas.height * .65);
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#fce09e";
+        ctx.strokeStyle = 'black';
+        ctx.font = "2em sans-serif";
+        ctx.strokeText("Darkness: Hold space to deal weak slash damage", 0, canvas.height * .8);
+        ctx.fillText("Darkness: Hold space to deal weak slash damage", 0, canvas.height * .8);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "#fce09e";
+        ctx.strokeStyle='black';
+        ctx.font = '2em sans-serif';
+        ctx.fillText("Darkness takes less damage and regens health when swapped out!", 0, canvas.height * .95);
+        ctx.strokeText("Darkness takes less damage and regens health when swapped out!", 0, canvas.height * .95);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+    }
+
     function movementHightlighter(e){
         e.preventDefault();
     }
+    function instListen(e){
+        e.preventDefault();
+        if(e.key=='i'){
+            inst = !inst;
+        }
+    }
 
     document.addEventListener("keydown",movementHightlighter,false);
+    document.addEventListener("keydown",instListen);
 })
