@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     sideCanvas.height =500;
     // canvas.width = 600;
     // canvas.height = 300;
-    console.log(canvas.width);
-    console.log(canvas.height);
+    // console.log(canvas.width);
+    // console.log(canvas.height);
     // sideCanvas.style.width= sideCanvas.width;
     // sideCanvas.style.height=sideCanvas.height;
 
@@ -135,6 +135,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       let levelBuffer=0;
       let levelLimit=700;
       let levelCounter=0;
+      let pause =false;
+      let lose =false;
     //
 
     let cooldownActive = false;
@@ -168,18 +170,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     function draw(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctxSide.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
-        ctx.drawImage(bg,0,0,300,150);
+        ctx.drawImage(bg,0,0,canvas.width,canvas.height);
         // console.log(x,y);
         drawGithub();
         drawScore();
         // ctx.drawImage(slash, 20, 20,30,30);
-        movement();
-        enemyHandler();
-        playerFire();
+        if(!pause){
+          if(!lose){
+
+            movement();
+            enemyHandler();
+            playerFire();
+            cooldownHandler();
+            hpRegen();
+            gameOver();
+          }else{//you lost
+            drawLose();
+          }
+        }else{
+          pauseScreen();
+        }
         healthbar();
-        cooldownHandler();
-        hpRegen();
-        gameOver();
+        // gameOver();
         // console.log(currentSlash.x);
         requestAnimationFrame(draw);
     }
@@ -272,9 +284,34 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function gameOver(){
       if(MeguminHealth<=0||KazumaHealth<=0||DarknessHealth<=0||AquaHealth<=0){
-        alert("Game Over");
-        document.location.reload();
+        // alert("Game Over");
+        lose =true;
+        // document.location.reload();
       }
+    }
+    function drawLose(){
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(3,232,252,.5)";
+      // ctx.globalAlpha = .2;
+      ctx.rect(0, canvas.height / 2 - 30, canvas.width, canvas.height * .5);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.fillStyle = "black";
+      ctx.fill();
+      ctx.font = "2em sans-serif";
+
+      ctx.fillText("Game Over!", canvas.width * .2, canvas.height / 2);
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.fillStyle = "black";
+      ctx.fill();
+      ctx.font = "1.5em sans-serif";
+
+      ctx.fillText("Press Space to play again!", canvas.width*.03, canvas.height * .7);
+      ctx.closePath();
     }
     function playerFire(){
         if (firePressed) {
@@ -359,6 +396,23 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(MeguminHealth < 100) MeguminHealth+=.01;
         if(KazumaHealth < 100) KazumaHealth+=.01;
       }
+    }
+
+    function pauseScreen(){
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(3,232,252,.5)";
+      // ctx.globalAlpha = .2;
+      ctx.rect(0, canvas.height / 2 - 30, canvas.width, canvas.height * .3);
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.fillStyle = "black";
+      ctx.fill();
+      ctx.font = "2em sans-serif";
+
+      ctx.fillText("Pause", canvas.width * .2, canvas.height / 2);
+      ctx.closePath();
     }
 
     function drawNextLevel(){
@@ -939,6 +993,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
       
     function keyDownHandler(e){
+              if(e.key=="p"){
+                pause = !pause;
+              }
               if (e.key == "Right" || e.key == "ArrowRight"|| e.key=="d") {
                 standingStill =false;
                 rightPressed = true;
@@ -993,6 +1050,7 @@ document.addEventListener('DOMContentLoaded',()=>{
               }
     }
     function keyUpHandler(e){
+      
         if (e.key == "Right" || e.key == "ArrowRight"|| e.key=='d') {
           rightPressed = false;
           standingStill = true;
@@ -1006,6 +1064,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             downPressed =false;
             standingStill =true;
         }else if(e.key=="Spacebar"||e.key==" "){
+          if(lose){document.location.reload();}
             firePressed =false;
             upExplosion();
         }
