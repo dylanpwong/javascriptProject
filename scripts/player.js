@@ -109,8 +109,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     let score =0;
 
     let charSelect =0;
-    var protagonistArray=[kazuma,megumin,darkness,aqua];
-    var spritesArray=[kazumaSprites,meguSprites,darknessSprites,aquaSprites];
+    var protagonistArray=[kazuma,megumin,aqua,darkness];
+  var spritesArray = [kazumaSprites, meguSprites, aquaSprites, darknessSprites];
 
     var protagonist = protagonistArray[charSelect];
     var protagonistSprites = spritesArray[charSelect];
@@ -395,10 +395,10 @@ document.addEventListener('DOMContentLoaded',()=>{
       ctxSide.closePath();
     }
     function hpRegen(){
-      if (charSelect!=2){
+      if (charSelect!=3){
         if(DarknessHealth < 100)DarknessHealth+=.05;
       }
-      if(charSelect == 3){
+      if(charSelect == 2){
         if(MeguminHealth < 100) MeguminHealth+=.025;
         if(KazumaHealth < 100) KazumaHealth+=.025;
       }
@@ -633,14 +633,14 @@ document.addEventListener('DOMContentLoaded',()=>{
                             currentSlash.y = this.y;
                             drawSlash3(this.x,this.y,this.slashDir,dir);
                             break;
-                        case 2:
+                        case 3:
                         slash.src = slashes[dir];
                         currentSlash.x = this.x;
                         currentSlash.y = this.y;
                         drawSlash3(this.x, this.y, this.slashDir, dir);
                         break;
 
-                        case 3:
+                        case 2:
                           drawWaterBullet(this.x,this.y);
                     }
                     // drawBullet(this.x,this.y);
@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           bullets.update = function () {
                 if (this.alive) {
                     switch(charSelect){
-                        case 3: //megumin straight bullets
+                        case 2: //megumin straight bullets
                             switch(dir){
                                 case "up":
                                     this.y -=20;
@@ -758,7 +758,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                             }
                             if(this.angle >=6) this.angle =0;
                             break;
-                        case 2: 
+                        case 3: 
                         switch (dir) {
                           case "up":
                             // slash.src = slashes.up;
@@ -832,7 +832,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       // console.log(newMob.x);
       newMob.moveToLocation = function( destX, destY) {
         // console.log(`beginDest: ${destX}`)
-        if (this.x < destX) { //moving right
+
+        if (this.x < destX ) { //moving right
           // console.log(currX);
           if(this.frameCounter<this.frameSwitch){
             this.img.src = this.sprites.rightWalk;
@@ -842,8 +843,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if (frameCounterLimit < this.frameSwitch * 2) this.frameCounter = 0;
           }
-          this.x += 1;
-        } else if (this.y < destY) { //moving down
+          this.x += (1);
+        } else if (this.y < destY  ) { //moving down
           if(this.frameCounter <this.frameSwitch){
             this.img.src = this.sprites.downWalk;
             this.frameCounter++;
@@ -852,8 +853,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if(this.frameCounter > this.frameSwitch * 2) this.frameCounter=0;
           }
-          this.y += 1;
-        } else if (this.x> destX) { //moving left
+          this.y += (1);
+        } else if (this.x > destX  ) { //moving left
           if(this.frameCounter < this.frameSwitch){
             this.img.src = this.sprites.leftWalk;
             this.frameCounter++;
@@ -862,9 +863,9 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if(this.frameCounter < this.frameSwitch * 2) this.frameCounter=0;
           }
-          this.x -= 1;
+          this.x -= (1 );
         }
-        else if (this.y > destY) { //moving up
+        else if (this.y > destY ) { //moving up
           if(this.frameCounter < this.frameSwitch){
             this.img.src = this.sprites.upWalk;
             this.frameCounter++;
@@ -873,7 +874,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if(this.frameCounter > this.frameSwitch *2) this.frameCounter =0;
           }
-          this.y -= 1;
+          this.y -= (1);
+          
         }else{
           // console.log(this.x);
           // console.log(destX);
@@ -891,10 +893,10 @@ document.addEventListener('DOMContentLoaded',()=>{
             case 1: 
               MeguminHealth -=(1.2 + damageStack);
               break;
-            case 2:
+            case 3:
               DarknessHealth -=(0.3 + damageStack*.5);
               break;
-            case 3:
+            case 2:
               AquaHealth -=(1 + damageStack);
               break;
           }
@@ -927,13 +929,18 @@ document.addEventListener('DOMContentLoaded',()=>{
           let randX = Math.floor(Math.random() * (canvas.width - 25));
           let randY = Math.floor(Math.random() * (canvas.height - 25));
           // console.log(`my x: ${this.x}`)
+          // let inc = 1 +  Math.floor(damageStack);
+          // let inc2 = Math.floor(damageStack);
           this.dest.x = randX;
           this.dest.y = randY;
           if(Math.random()>.2){
             this.dest.x = x;
             this.dest.y = y;
           }
-          // console.log(`dest.x: ${this.dest.x}`);
+          if(Math.random()>.5){
+            this.x += (Math.floor((this.x - x)>0)) ? -10:10;
+            this.y += (Math.floor((this.y - y) > 0)) ? -10 : 10;
+          }
           this.wave =true;
         }
       }
