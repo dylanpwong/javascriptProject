@@ -3,7 +3,7 @@
     margin: 0;
 }
 html{
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 canvas {
