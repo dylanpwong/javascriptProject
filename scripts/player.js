@@ -995,6 +995,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
       
     function keyDownHandler(e){
+      e.preventDefault();
               if(e.key=="p"){
                 pause = !pause;
               }
