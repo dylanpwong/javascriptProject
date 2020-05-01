@@ -1,0 +1,33 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+canvas {
+    background: #eee;
+    width: 100%;
+    height: 100%;
+    /* display: block;
+    margin: 0 auto;
+} */
+}
+.main{
+    width: 90vw;
+    height: 70vh;
+    padding: 5%
+}
+.gameSpace{
+    display: flex;
+    justify-content: space-between;
+    padding: 5% 0 5% 0;
+}
+.game {
+    width: 70%;
+}
+.links {
+    width: 20%;
+}
+.controls{
+    height: 20%;
+    width: 100%;
+}
