@@ -3,7 +3,10 @@
     margin: 0;
 }
 html{
-    overflow: hidden;
+    /* overflow: hidden; */
+}
+body{
+    /* max-width: 190em; */
 }
 
 canvas {
@@ -16,6 +19,7 @@ canvas {
 }
 .main{
     width: 90vw;
+    max-width: 1200px;
     height: 70vh;
     padding: 0 5%
 }
