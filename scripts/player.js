@@ -232,7 +232,11 @@ document.addEventListener('DOMContentLoaded',()=>{
              ? protagonistSprites.rightStart
              : protagonistSprites.rightWalk;
            ctx.drawImage(protagonist, x, y, 25, 25);
-           x += dx;
+           if(charSelect==2){
+             x+=2 * dx
+           } else{
+             x += dx;
+           }
            if (x + 25 > canvas.width) {
              x = canvas.width - 25;
            }
@@ -247,7 +251,11 @@ document.addEventListener('DOMContentLoaded',()=>{
              : protagonistSprites.leftWalk;
            ctx.drawImage(protagonist, x, y, 25, 25);
 
-           x -= dx;
+           if (charSelect == 2) {
+             x -= 2 * dx
+           } else {
+             x -= dx;
+           }
            if (x < 0) x = 0;
            if (frameCounter >= frameCounterLimit) {
              walkingFrame = !walkingFrame;
@@ -259,7 +267,12 @@ document.addEventListener('DOMContentLoaded',()=>{
              ? protagonistSprites.upStart
              : protagonistSprites.upWalk;
            ctx.drawImage(protagonist, x, y, 25, 25);
-           y += dy;
+          //  y += dy;
+           if (charSelect == 2) {
+             y += 2 * dy
+           } else {
+             y += dy;
+           }
            if (y < 0) y = 0;
            if (frameCounter >= frameCounterLimit) {
              walkingFrame = !walkingFrame;
@@ -271,7 +284,12 @@ document.addEventListener('DOMContentLoaded',()=>{
              ? protagonistSprites.downStart
              : protagonistSprites.downWalk;
            ctx.drawImage(protagonist, x, y, 25, 25);
-           y -= dy;
+          //  y -= dy;
+           if (charSelect == 2) {
+             y -= 2 * dy
+           } else {
+             y -= dy;
+           }
            if (y + 25 > canvas.height) {
              y = canvas.height - 25;
            }
@@ -908,7 +926,7 @@ document.addEventListener('DOMContentLoaded',()=>{
               // console.log(`currentSlash: ${currentSlash.x}`);
               // console.log(charSelect);
               if(charSelect==0) this.health -= 20;
-              if(charSelect==2) this.health -=3;
+              if(charSelect==2) this.health -=5;
               // this.alive =false;
             }
         }
