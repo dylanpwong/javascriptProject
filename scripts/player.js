@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           }else{
             levelBuffer=0;
             levelCounter++;
-            damageStack +=1;
+            damageStack +=0.2;
             if(levelCounter >2){
               canvas.width=600;
               canvas.height=300;
@@ -395,8 +395,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(DarknessHealth < 100)DarknessHealth+=.05;
       }
       if(charSelect == 3){
-        if(MeguminHealth < 100) MeguminHealth+=.01;
-        if(KazumaHealth < 100) KazumaHealth+=.01;
+        if(MeguminHealth < 100) MeguminHealth+=.025;
+        if(KazumaHealth < 100) KazumaHealth+=.025;
       }
     }
 
@@ -882,16 +882,16 @@ document.addEventListener('DOMContentLoaded',()=>{
           // console.log("Hit");
           switch(charSelect){
             case 0:
-              KazumaHealth -=(1 + damageStack);
+              KazumaHealth -=(.7 + damageStack);
               break;
             case 1: 
-              MeguminHealth -=(1.5 + damageStack);
+              MeguminHealth -=(1.2 + damageStack);
               break;
             case 2:
               DarknessHealth -=(0.3 + damageStack*.5);
               break;
             case 3:
-              AquaHealth -=(1.3 + damageStack);
+              AquaHealth -=(1 + damageStack);
               break;
           }
           // KazumaHealth -=1;
