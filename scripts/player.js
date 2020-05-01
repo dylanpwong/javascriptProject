@@ -375,6 +375,10 @@ document.addEventListener('DOMContentLoaded',()=>{
               canvas.height=300;
               levelCounter+=20;
             }
+            if(levelCounter >80){
+              canvas.width = 1000;
+              canvas.height = 500;
+            }
             spawner(5+levelCounter);
           }
       }
