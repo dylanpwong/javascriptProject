@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       let levelCounter=0;
       let pause =false;
       let lose =false;
+      let damageStack=0;
     //
 
     let cooldownActive = false;
@@ -368,6 +369,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           }else{
             levelBuffer=0;
             levelCounter++;
+            damageStack +=1;
             if(levelCounter >2){
               canvas.width=600;
               canvas.height=300;
@@ -880,16 +882,16 @@ document.addEventListener('DOMContentLoaded',()=>{
           // console.log("Hit");
           switch(charSelect){
             case 0:
-              KazumaHealth -=1;
+              KazumaHealth -=(1 + damageStack);
               break;
             case 1: 
-              MeguminHealth -=1.5;
+              MeguminHealth -=(1.5 + damageStack);
               break;
             case 2:
-              DarknessHealth -=0.3;
+              DarknessHealth -=(0.3 + damageStack*.5);
               break;
             case 3:
-              AquaHealth -=1.3;
+              AquaHealth -=(1.3 + damageStack);
               break;
           }
           // KazumaHealth -=1;
