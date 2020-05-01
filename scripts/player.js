@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         healthbar();
         cooldownHandler();
         hpRegen();
-        // gameOver();
+        gameOver();
         // console.log(currentSlash.x);
         requestAnimationFrame(draw);
     }
