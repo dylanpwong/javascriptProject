@@ -1082,13 +1082,29 @@ document.addEventListener('DOMContentLoaded',()=>{
        let baseY = (Math.floor(Math.random() * canvas.height) > canvas.height/2) ? canvas.height - 1 : 1;
        let  baseX = (Math.floor(Math.random() * canvas.height) > canvas.width/2) ? canvas.width - 1 : 1;
 
-       let enemyPos={
-            x: randX,
-            y: baseY,
-        }
-       let enemyPos2={
-            x: baseX,
+       let leftWallX = 1;
+       let upWallY = 1;
+        let rightWallX = Math.floor(canvas.width - 1);
+        let downWallY= Math.floor(canvas.height - 1);
+       let enemyPos={ // along left side wall
+            // x: randX,
+            // y: baseY,
+            x: leftWallX,
             y: randY,
+        }
+       let enemyPos2={// along up wall
+            // x: baseX,
+            // y: randY,
+            x: randX,
+            y: upWallY
+        }
+        let enemyPos3={ //along right wall
+            x: rightWallX,
+            y: randY
+        }
+        let enemyPos4={// along down Wall
+            x: randX,
+            y: downWallY
         }
       // console.log(randY);
         // let e1 = new Enemy((Math.random > 0.5) ? enemyPos: enemyPos2);
@@ -1098,7 +1114,22 @@ document.addEventListener('DOMContentLoaded',()=>{
         //   diff--;
         // }
         for(let mobs = 0; mobs< diff; mobs++){
-          let e1 = createMob((Math.random() > 0.5) ? enemyPos : enemyPos2);
+          let chooser = Math.round((Math.random() * 4.0));
+          let startPos = enemyPos;
+          switch(chooser){
+            case 0:
+                startPos = enemyPos;
+                break;
+            case 1:
+                startPos = enemyPos2;
+            case 2:
+                startPos = enemyPos3;
+            case 3:
+                startPos = enemyPos4;
+            default:
+          }
+          let e1 = createMob(startPos);
+          // let e1 = createMob((Math.random() > 0.5) ? enemyPos : enemyPos2);
           enemyArray.push(e1)
         }
         // enemyArray.push(e1);
