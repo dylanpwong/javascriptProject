@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     sideCanvas.wdith =1000;
     sideCanvas.height =500;
+
+    let levelWidth = 300;
+    let levelHeight = 150;
     // canvas.width = 600;
     // canvas.height = 300;
     // console.log(canvas.width);
@@ -191,14 +194,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     function draw(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctxSide.clearRect(0, 0, sideCanvas.width, sideCanvas.height);
-        ctx.drawImage(bg,0,0,canvas.width,canvas.height);
         // console.log(x,y);
         drawGithub();
         drawScore();
         // ctx.drawImage(slash, 20, 20,30,30);
+      canvas.width = levelWidth;
+      canvas.height = levelHeight;
+        ctx.drawImage(bg,0,0,canvas.width,canvas.height);
+        // showCover=false;
+        // coverExplosionCounter=100;
         if(showCover){
-          canvas.width = 900;
-          canvas.width = 450;
+          canvas.width = 600;
+          canvas.height = 300;
           // console.log(`canvas Width${canvas.width}`); 300
           // console.log(`canvas Height ${canvas.height}`); 150
           // console.log("cover");
@@ -210,9 +217,8 @@ document.addEventListener('DOMContentLoaded',()=>{
           ctx.drawImage(cover, 0, 0, canvas.width, canvas.height);
           coverExplosionCounter++;
         }else{  
-
           if(!pause){
-            bg.src ='./images/chicknzone.jpg';
+            bg.src ='images/chicknzone.jpg';
             if(!lose){
   
               movement();
@@ -238,8 +244,9 @@ document.addEventListener('DOMContentLoaded',()=>{
           }
         }
         healthbar();
-        // gameOver();
-        // console.log(currentSlash.x);
+       
+      // canvas.width = 300;
+      // canvas.height = 150;
         requestAnimationFrame(draw);
     }
 
@@ -358,10 +365,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     function drawStart(){
       ctx.beginPath();
       ctx.fillStyle = "rgba(3,232,252,.5)";
-      ctx.rect(canvas.width*.33,canvas.height*.60,canvas.width * .32,canvas.height*.2);
+      ctx.rect(canvas.width*.33,canvas.height*.60,canvas.width * .45,canvas.height*.2);
       ctx.fill();
       ctx.fillStyle = "black";
-      ctx.fillText("Press Space to Start!", canvas.width * .35, canvas.height * .70, canvas.width * .55, canvas.height * .2);
+      ctx.font="1.7em Arial";
+      ctx.fillText("Press Space to Start!", canvas.width * .335, canvas.height * .75, canvas.width * .70, canvas.height * .3);
       ctx.closePath();
     }
     function drawLose(){
@@ -445,13 +453,17 @@ document.addEventListener('DOMContentLoaded',()=>{
             levelCounter++;
             damageStack +=0.2;
             if(levelCounter >2){
-              canvas.width=600;
-              canvas.height=300;
+              // canvas.width=600;
+              // canvas.height=300;
+              levelWidth=600;
+              levelHeight=300;
               levelCounter+=20;
             }
             if(levelCounter >80){
-              canvas.width = 1000;
-              canvas.height = 500;
+              // canvas.width = 1000;
+              // canvas.height = 500;
+              levelWidth=1000;
+              levelHeight=500;
             }
             spawner(5+levelCounter);
           }
