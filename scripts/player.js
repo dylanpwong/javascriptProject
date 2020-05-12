@@ -197,7 +197,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         drawScore();
         // ctx.drawImage(slash, 20, 20,30,30);
         if(showCover){
-          
+          canvas.width = 900;
+          canvas.width = 450;
+          // console.log(`canvas Width${canvas.width}`); 300
+          // console.log(`canvas Height ${canvas.height}`); 150
           // console.log("cover");
           ctx.drawImage(cover,0,0,canvas.width,canvas.height);
           // ctx.drawImage(konoLogo,canvas.width * .3,canvas.height*.3,canvas.width *.3,canvas.height*.3);
@@ -358,7 +361,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       ctx.rect(canvas.width*.33,canvas.height*.60,canvas.width * .32,canvas.height*.2);
       ctx.fill();
       ctx.fillStyle = "black";
-      ctx.fillText("Press Space to Start!", canvas.width * .33, canvas.height * .70, canvas.width * .33, canvas.height * .2);
+      ctx.fillText("Press Space to Start!", canvas.width * .35, canvas.height * .70, canvas.width * .55, canvas.height * .2);
       ctx.closePath();
     }
     function drawLose(){
