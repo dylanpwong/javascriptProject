@@ -1114,7 +1114,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         //   diff--;
         // }
         for(let mobs = 0; mobs< diff; mobs++){
-          let chooser = Math.round((Math.random() * 4.0));
+          let chooser = Math.round((Math.random() * 3.0));
           let startPos = enemyPos;
           switch(chooser){
             case 0:
@@ -1122,10 +1122,13 @@ document.addEventListener('DOMContentLoaded',()=>{
                 break;
             case 1:
                 startPos = enemyPos2;
+                break;
             case 2:
                 startPos = enemyPos3;
+                break;
             case 3:
                 startPos = enemyPos4;
+                break;
             default:
           }
           let e1 = createMob(startPos);
