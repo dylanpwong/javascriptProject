@@ -15,6 +15,11 @@ yellowSlimeSpites={
     downStart: "./images/yellowSlime/SlimesYDownStart.png",
     upWalk: "./images/yellowSlime/SlimesUpWalk.png",
     downWalk: "./images/yellowSlime/SlimesYDownWalk.png",
+
+    damageUp: './images/SlimesRedUp2.png',
+    damageDown: './images/SlimesRedDown.png',
+    damageLeft: './images/SlimesRedLeft.png',
+    damageRight: './images/SlimesRedRight.png'
 }
 
 function Enemy(pos){
@@ -27,6 +32,7 @@ function Enemy(pos){
         up: 'up',
         down: 'down'
     }
+    this.currentDirection=null;
     this.directions = [];
     this.dest ={
         x: null,

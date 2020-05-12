@@ -143,6 +143,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function pauseB(){
         ctx.beginPath();
+        ctx.fillStyle = "rgba(3,232,252,.5)";
+        // ctx.globalAlpha = .2;
+        ctx.rect(canvas.width * .80, canvas.height * .02, canvas.width * .18, canvas.height * .13);
+        ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.fill();
         ctx.font = "1em sans-serif";
@@ -255,7 +263,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         ctx.fill();
         ctx.font = "1em sans-serif";
 
-        ctx.fillText("Press I", canvas.width*.9, canvas.height * .5);
+        ctx.fillText("Press I for Controls", canvas.width*.85, canvas.height * .5);
         ctx.closePath();
 
         ctx.beginPath();

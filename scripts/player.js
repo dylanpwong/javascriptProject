@@ -93,6 +93,15 @@ document.addEventListener('DOMContentLoaded',()=>{
       left: './images/slashes/slashLeft.png',
 
     };
+
+    let myCovers={
+      one:'images/16bitBack.jpg',
+      two: 'images/greenvalley.png',
+      three: 'images/Konocropped.jpg',
+      exp1: 'images/exp1.jpg',
+      exp2: 'images/exp2.jpg'
+    };
+
     var megumin = new Image();
     var kazuma = new Image();
     var darkness =new Image();
@@ -100,6 +109,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     var slash = new Image();
     var enemy = new Image();
     var bg =new Image();
+
+    var cover = new Image();
+    var konoLogo = new Image();
+    // konoLogo.src ='images/Konocropped.jpg'
+    cover.src = myCovers.exp1;
+    let showCover=true;
+    let coverExplosionCounter=0;
+    let coverExplosionLimit=100;
+
     bg.src ='./images/chicknzone.jpg';
     slash.src = slashes.f1;
     let KazumaHealth = 100;
@@ -178,30 +196,43 @@ document.addEventListener('DOMContentLoaded',()=>{
         drawGithub();
         drawScore();
         // ctx.drawImage(slash, 20, 20,30,30);
-        if(!pause){
-          bg.src ='./images/chicknzone.jpg';
-          if(!lose){
+        if(showCover){
+          
+          // console.log("cover");
+          ctx.drawImage(cover,0,0,canvas.width,canvas.height);
+          // ctx.drawImage(konoLogo,canvas.width * .3,canvas.height*.3,canvas.width *.3,canvas.height*.3);
+          drawStart();
+        }else if(coverExplosionCounter<coverExplosionLimit){
+          cover.src = myCovers.exp2;
+          ctx.drawImage(cover, 0, 0, canvas.width, canvas.height);
+          coverExplosionCounter++;
+        }else{  
 
-            movement();
-            enemyHandler();
-            playerFire();
-            cooldownHandler();
-            hpRegen();
-            gameOver();
-          }else{//you lost
-            drawLose();
-          }
-        }else{
-          if(aquaBuffer<=aquaLimit){
-            bg.src =  './images/aquapause.jpg';
-            aquaBuffer++
-          }else if(aquaBuffer<= aquaLimit*2){
-            bg.src = './images/aquapause2.png';
-            aquaBuffer++;
+          if(!pause){
+            bg.src ='./images/chicknzone.jpg';
+            if(!lose){
+  
+              movement();
+              enemyHandler();
+              playerFire();
+              cooldownHandler();
+              hpRegen();
+              gameOver();
+            }else{//you lost
+              drawLose();
+            }
           }else{
-            aquaBuffer = 0;
+            if(aquaBuffer<=aquaLimit){
+              bg.src =  './images/aquapause.jpg';
+              aquaBuffer++
+            }else if(aquaBuffer<= aquaLimit*2){
+              bg.src = './images/aquapause2.png';
+              aquaBuffer++;
+            }else{
+              aquaBuffer = 0;
+            }
+            //pauseScreen();
           }
-          //pauseScreen();
         }
         healthbar();
         // gameOver();
@@ -319,6 +350,16 @@ document.addEventListener('DOMContentLoaded',()=>{
         lose =true;
         // document.location.reload();
       }
+    }
+
+    function drawStart(){
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(3,232,252,.5)";
+      ctx.rect(canvas.width*.33,canvas.height*.60,canvas.width * .32,canvas.height*.2);
+      ctx.fill();
+      ctx.fillStyle = "black";
+      ctx.fillText("Press Space to Start!", canvas.width * .33, canvas.height * .70, canvas.width * .33, canvas.height * .2);
+      ctx.closePath();
     }
     function drawLose(){
       ctx.beginPath();
@@ -701,9 +742,23 @@ document.addEventListener('DOMContentLoaded',()=>{
                           this.alive = false;
                         }
                         for (let ene = 0; ene < enemyArray.length; ene++) {
-                          if (enemyArray[ene].x < this.x + 10 && enemyArray[ene].x > this.x - 10) {
-                            if (enemyArray[ene].y < this.y + 10 && enemyArray[ene].y > this.y - 10) {
+                          if (enemyArray[ene].x < this.x + 15 && enemyArray[ene].x > this.x - 15) {
+                            if (enemyArray[ene].y < this.y + 15 && enemyArray[ene].y > this.y - 15) {
                               enemyArray[ene].health -= 5;
+                              switch (enemyArray[ene].currentDirection) {
+                                case 'left':
+                                  enemyArray[ene].img.src = enemyArray[ene].sprites.damageLeft;
+                                  break;
+                                case 'right':
+                                  enemyArray[ene].img.src = enemyArray[ene].sprites.damageRight;
+                                  break;
+                                case 'up':
+                                  enemyArray[ene].img.src = enemyArray[ene].sprites.damageUp;
+                                  break;
+                                case 'down':
+                                  enemyArray[ene].img.src = enemyArray[ene].sprites.damageDown;
+                                  break;
+                              }
                             }
                           }
                         }
@@ -775,10 +830,24 @@ document.addEventListener('DOMContentLoaded',()=>{
                               // console.log(this.explosionSize);
                               // explosionFrameCounter++;
                               //collision?
-                              for(let ene =0;ene < enemyArray.length;ene++){
-                                if(enemyArray[ene].x < this.x + 10 && enemyArray[ene].x > this.x -10){
-                                  if(enemyArray[ene].y <this.y +10 && enemyArray[ene].y >this.y -10){
+                              for(let ene =0;ene < enemyArray.length;ene++){ //damage from explosion
+                                if(enemyArray[ene].x < this.x + 15 && enemyArray[ene].x > this.x -15){
+                                  if(enemyArray[ene].y <this.y +15 && enemyArray[ene].y >this.y -15){
                                     enemyArray[ene].health -= 20;
+                                    switch (enemyArray[ene].currentDirection) {
+                                      case 'left':
+                                        enemyArray[ene].img.src = enemyArray[ene].sprites.damageLeft;
+                                        break;
+                                      case 'right':
+                                        enemyArray[ene].img.src = enemyArray[ene].sprites.damageRight;
+                                        break;
+                                      case 'up':
+                                        enemyArray[ene].img.src = enemyArray[ene].sprites.damageUp;
+                                        break;
+                                      case 'down':
+                                        enemyArray[ene].img.src = enemyArray[ene].sprites.damageDown;
+                                        break;
+                                    }
                                   }
                                 }
                               }
@@ -863,7 +932,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       // console.log(newMob.x);
       newMob.moveToLocation = function( destX, destY) {
         // console.log(`beginDest: ${destX}`)
-
+        let currentFace;
         if (this.x < destX ) { //moving right
           // console.log(currX);
           if(this.frameCounter<this.frameSwitch){
@@ -874,6 +943,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if (frameCounterLimit < this.frameSwitch * 2) this.frameCounter = 0;
           }
+          currentFace = 'right';
+          this.currentDirection ='right';
           this.x += (1);
         } else if (this.y < destY  ) { //moving down
           if(this.frameCounter <this.frameSwitch){
@@ -884,6 +955,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if(this.frameCounter > this.frameSwitch * 2) this.frameCounter=0;
           }
+          currentFace ='down';
+          this.currentDirection="down";
           this.y += (1);
         } else if (this.x > destX  ) { //moving left
           if(this.frameCounter < this.frameSwitch){
@@ -894,6 +967,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if(this.frameCounter < this.frameSwitch * 2) this.frameCounter=0;
           }
+          currentFace = 'left';
+          this.currentDirection='left';
           this.x -= (1 );
         }
         else if (this.y > destY ) { //moving up
@@ -905,6 +980,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             this.frameCounter++;
             if(this.frameCounter > this.frameSwitch *2) this.frameCounter =0;
           }
+          currentFace='up';
+          this.currentDirection ='up';
           this.y -= (1);
           
         }else{
@@ -938,8 +1015,27 @@ document.addEventListener('DOMContentLoaded',()=>{
               // console.log(`this.x: ${this.x}`);
               // console.log(`currentSlash: ${currentSlash.x}`);
               // console.log(charSelect);
-              if(charSelect==0) this.health -= 20;
-              if(charSelect==2) this.health -=5;
+              if(charSelect==0) {
+                
+                this.health -= 20;
+              }
+              if(charSelect==2){ 
+                this.health -=5;
+              }
+              switch(this.currentDirection){
+                case 'left':
+                  this.img.src = this.sprites.damageLeft;
+                  break;
+                case 'right':
+                  this.img.src = this.sprites.damageRight;
+                  break;
+                case 'up':
+                  this.img.src = this.sprites.damageUp;
+                  break;
+                case 'down':
+                  this.img.src = this.sprites.damageDown;
+                  break;
+              }
               // this.alive =false;
             }
         }
@@ -1023,6 +1119,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             // createBullet();
             // KazumaHealth -=5;
             firePressed =true;
+            showCover =false;
           //  if(cooldownCounter<=explosionCooldown){
 
           //  }else{
