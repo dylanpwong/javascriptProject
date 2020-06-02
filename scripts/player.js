@@ -385,7 +385,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       ctx.fill();
       ctx.font = "2em sans-serif";
 
-      ctx.fillText("Game Over!", canvas.width * .2, canvas.height / 2);
+      ctx.fillText("Game Over!", (canvas.width * .2), canvas.height / 2);
+      ctx.textAlign='center';
       ctx.closePath();
 
       ctx.beginPath();
@@ -393,7 +394,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       ctx.fill();
       ctx.font = "1.5em sans-serif";
 
-      ctx.fillText("Press Space to play again!", canvas.width*.03, canvas.height * .7);
+      // ctx.fillText("Press Space to play again!", canvas.width*.03, canvas.height * .7);
+      ctx.fillText("Press Space to play again!",canvas.width *.5,canvas.height *.7);
       ctx.closePath();
     }
     function playerFire(){
