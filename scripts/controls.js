@@ -314,8 +314,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         ctx.fillStyle = "#fce09e";
         ctx.strokeStyle='black';
         ctx.font = '2em sans-serif';
-        ctx.fillText("Darkness takes less damage and regens health when swapped out!", 0, canvas.height * .95);
         ctx.strokeText("Darkness takes less damage and regens health when swapped out!", 0, canvas.height * .95);
+        ctx.fillText("Darkness takes less damage and regens health when swapped out!", 0, canvas.height * .95);
         ctx.stroke();
         ctx.fill();
         ctx.closePath();
